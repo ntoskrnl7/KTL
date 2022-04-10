@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #ifndef KTL_NO_CXX_STANDARD_LIBRARY
 #include <memory>
@@ -62,15 +62,15 @@ class unique_ptr {
 
  private:
   template <class,
-            class>  //Для конструирования из unique_ptr с указателем
-                    //другого типа
-  friend class unique_ptr;  //(например, для
-                            //полиморфных объектов)
+            class>  //Р”Р»СЏ РєРѕРЅСЃС‚СЂСѓРёСЂРѕРІР°РЅРёСЏ РёР· unique_ptr СЃ СѓРєР°Р·Р°С‚РµР»РµРј
+                    //РґСЂСѓРіРѕРіРѕ С‚РёРїР°
+  friend class unique_ptr;  //(РЅР°РїСЂРёРјРµСЂ, РґР»СЏ
+                            //РїРѕР»РёРјРѕСЂС„РЅС‹С… РѕР±СЉРµРєС‚РѕРІ)
 
  public:
   template <class Dx = Deleter,
-            enable_if_t<!is_pointer_v<Dx> &&  //Нельзя хранить nullptr
-                                              //в качестве deleter'a
+            enable_if_t<!is_pointer_v<Dx> &&  //РќРµР»СЊР·СЏ С…СЂР°РЅРёС‚СЊ nullptr
+                                              //РІ РєР°С‡РµСЃС‚РІРµ deleter'a
                             is_default_constructible_v<Dx>,
                         int> = 0>
   constexpr unique_ptr() noexcept {}
@@ -118,11 +118,11 @@ class unique_ptr {
                   pointer> &&
               conditional_t<is_reference_v<OtherDeleter>,
                             is_same<OtherDeleter,
-                                    deleter_type>,  //При хранении
-                                                    //ссылки на deleter
-                                                    //типы OtherDeleter
-                                                    //и deleter_type
-                                                    //должны совпадать
+                                    deleter_type>,  //РџСЂРё С…СЂР°РЅРµРЅРёРё
+                                                    //СЃСЃС‹Р»РєРё РЅР° deleter
+                                                    //С‚РёРїС‹ OtherDeleter
+                                                    //Рё deleter_type
+                                                    //РґРѕР»Р¶РЅС‹ СЃРѕРІРїР°РґР°С‚СЊ
                             is_convertible<OtherDeleter, deleter_type> >::value,
           int> = 0>
   constexpr unique_ptr(unique_ptr<OtherTy, OtherDeleter>&& other) noexcept(
@@ -151,8 +151,8 @@ class unique_ptr {
   constexpr unique_ptr&
   operator=(unique_ptr<OtherTy, OtherDeleter>&& other) noexcept(
       is_nothrow_assignable_v<deleter_type, OtherDeleter>) {
-    //Проверка addressof(other) != this не обязательная: в таком случае
-    //будет выбран предыдущий шаблон, а там проверка есть
+    //РџСЂРѕРІРµСЂРєР° addressof(other) != this РЅРµ РѕР±СЏР·Р°С‚РµР»СЊРЅР°СЏ: РІ С‚Р°РєРѕРј СЃР»СѓС‡Р°Рµ
+    //Р±СѓРґРµС‚ РІС‹Р±СЂР°РЅ РїСЂРµРґС‹РґСѓС‰РёР№ С€Р°Р±Р»РѕРЅ, Р° С‚Р°Рј РїСЂРѕРІРµСЂРєР° РµСЃС‚СЊ
     reset(other.release());
     get_deleter() = forward<deleter_type>(other.get_deleter());
     return *this;
@@ -335,8 +335,8 @@ template <class Ty, class Dx>
 unique_ptr(Ty*, Dx&&) -> unique_ptr<Ty, Dx>;
 
 /********************************************************************************
-В соответствии с правилами вывода типов шаблонных аргументов
-deduction guide выше может привести к неочевидным последствиям:
+Р’ СЃРѕРѕС‚РІРµС‚СЃС‚РІРёРё СЃ РїСЂР°РІРёР»Р°РјРё РІС‹РІРѕРґР° С‚РёРїРѕРІ С€Р°Р±Р»РѕРЅРЅС‹С… Р°СЂРіСѓРјРµРЅС‚РѕРІ
+deduction guide РІС‹С€Рµ РјРѕР¶РµС‚ РїСЂРёРІРµСЃС‚Рё Рє РЅРµРѕС‡РµРІРёРґРЅС‹Рј РїРѕСЃР»РµРґСЃС‚РІРёСЏРј:
 
 auto make_resource_guard(some_type* resource) {
 auto guard = [](some_type* res){ release_resource(res); };
@@ -344,13 +344,13 @@ using guard_type = decltype(guard);
 return unique_ptr(resource, guard);
 }
 
-Тип возвращаемого значения окажется
+РўРёРї РІРѕР·РІСЂР°С‰Р°РµРјРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ РѕРєР°Р¶РµС‚СЃСЏ
 unique_ptr<some_type, guard_type&>!
-Во избежание получения висячей ссылки
-ниже добавлено дополнительно правило, запрещающее автоматическую подстановку
-l-value ref в аргумент шаблона.
-При необходимости сконструировать unique_ptr, хранящий ссылку на deleter,
-необходимо указать это явно:
+Р’Рѕ РёР·Р±РµР¶Р°РЅРёРµ РїРѕР»СѓС‡РµРЅРёСЏ РІРёСЃСЏС‡РµР№ СЃСЃС‹Р»РєРё
+РЅРёР¶Рµ РґРѕР±Р°РІР»РµРЅРѕ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅРѕ РїСЂР°РІРёР»Рѕ, Р·Р°РїСЂРµС‰Р°СЋС‰РµРµ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєСѓСЋ РїРѕРґСЃС‚Р°РЅРѕРІРєСѓ
+l-value ref РІ Р°СЂРіСѓРјРµРЅС‚ С€Р°Р±Р»РѕРЅР°.
+РџСЂРё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё СЃРєРѕРЅСЃС‚СЂСѓРёСЂРѕРІР°С‚СЊ unique_ptr, С…СЂР°РЅСЏС‰РёР№ СЃСЃС‹Р»РєСѓ РЅР° deleter,
+РЅРµРѕР±С…РѕРґРёРјРѕ СѓРєР°Р·Р°С‚СЊ СЌС‚Рѕ СЏРІРЅРѕ:
 unique_ptr<some_type, deleter_type&> uptr(...);
 *********************************************************************************/
 
@@ -767,7 +767,7 @@ class weak_ptr : public mm::details::refcounted_ptr_base<Ty, weak_ptr<Ty> > {
     MyBase::copy_construct_from(other);
   }
 
-  weak_ptr(const shared_ptr<Ty>& sptr) noexcept;  //Определены после shared_ptr
+  weak_ptr(const shared_ptr<Ty>& sptr) noexcept;  //РћРїСЂРµРґРµР»РµРЅС‹ РїРѕСЃР»Рµ shared_ptr
 
   template <class OtherTy,
             enable_if_t<is_convertible_v<Ty*, OtherTy*>, int> = 0>

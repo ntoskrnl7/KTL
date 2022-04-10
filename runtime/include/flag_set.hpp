@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <type_traits_impl.hpp>
 
 namespace ktl {
@@ -45,7 +45,7 @@ struct flag_set {
     constexpr value_type mask{static_cast<value_type>(flag)};
 
     if constexpr ((mask & (mask - 1)) !=
-                  0) {  // true, åñëè ÷èñëî - íå ñòåïåíü 2
+                  0) {  // true, ÐµÑÐ»Ð¸ Ñ‡Ð¸ÑÐ»Ð¾ - Ð½Ðµ ÑÑ‚ÐµÐ¿ÐµÐ½ÑŒ 2
       return (m_value & mask) >> count_trailing_zeros(mask);
     } else {
       return m_value & mask ? 1 : 0;
