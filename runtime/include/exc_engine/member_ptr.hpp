@@ -1,9 +1,9 @@
-#pragma once
+п»ї#pragma once
 #include <../basic_types.hpp>
 
 namespace ktl::crt::exc_engine {
 using uintptr_t =
-    int64_t;  // Определяем здесь во избежание конфликта с typedef'ом в vadef.h
+    int64_t;  // РћРїСЂРµРґРµР»СЏРµРј Р·РґРµСЃСЊ РІРѕ РёР·Р±РµР¶Р°РЅРёРµ РєРѕРЅС„Р»РёРєС‚Р° СЃ typedef'РѕРј РІ vadef.h
 using offset_t = uint32_t;
 
 class member_ptr {

@@ -40,7 +40,7 @@ static void* allocate_impl(const alloc_request& request) noexcept {
       "database");
 
   if (request.alignment <= get_max_alignment_for_pool(pool_type)) {
-    return ExAllocatePoolUninitialized(pool_type, bytes_count, pool_tag);
+    return ExAllocatePoolWithTag(pool_type, bytes_count, pool_tag);
   }
 
   crt_assert_with_msg(alignment <= MAX_ALLOCATION_ALIGNMENT,
@@ -48,7 +48,7 @@ static void* allocate_impl(const alloc_request& request) noexcept {
 
   const size_t page_aligned_size{
       (max)(bytes_count, static_cast<size_t>(MAX_ALLOCATION_ALIGNMENT))};
-  return ExAllocatePoolUninitialized(pool_type, page_aligned_size, pool_tag);
+  return ExAllocatePoolWithTag(pool_type, page_aligned_size, pool_tag);
 }
 
 static void deallocate_impl(void* memory_block, pool_tag_t pool_tag) noexcept {

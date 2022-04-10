@@ -16,6 +16,12 @@
 
 #include <ntddk.h>
 
+EXTERN_C DRIVER_INITIALIZE DriverEntry;
+
+#ifdef ALLOC_PRAGMA
+#pragma alloc_text(INIT, DriverEntry)
+#endif
+
 using namespace ktl;
 
 TIME_FIELDS GetCurrentTime() noexcept;
@@ -23,7 +29,7 @@ void RunTests();
 
 EXTERN_C NTSTATUS
 DriverEntry([[maybe_unused]] DRIVER_OBJECT* driver_object,
-            [[maybe_unused]] UNICODE_STRING* registry_path) noexcept {
+            [[maybe_unused]] UNICODE_STRING* registry_path) {
   try {
     const auto time{GetCurrentTime()};
     auto str{

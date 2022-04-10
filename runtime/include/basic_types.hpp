@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 
 #ifndef KTL_NO_CXX_STANDARD_LIBRARY
 #include <cstdint>
@@ -7,8 +7,8 @@ using std::size_t;
 #else
 namespace std {
 enum class align_val_t : size_t {
-};  // Предопределённый тип - определить и использовать только
-    // ktl::align_val_t{} невозможно
+};  // РџСЂРµРґРѕРїСЂРµРґРµР»С‘РЅРЅС‹Р№ С‚РёРї - РѕРїСЂРµРґРµР»РёС‚СЊ Рё РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ С‚РѕР»СЊРєРѕ
+    // ktl::align_val_t{} РЅРµРІРѕР·РјРѕР¶РЅРѕ
 }
 
 using int8_t = signed char;
